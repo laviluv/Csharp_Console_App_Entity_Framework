@@ -6,6 +6,14 @@ namespace MP_EF_Lavinia_Bleoca
 {
     class Computers : Assets
     {
+
+        /*
+        public Computers()
+        {
+            this.ResourceType = "computerx";
+        }
+        */
+
         public Computers( string model, string brand, DateTime purchased)
         {
            // ResourceType = resourcetype;
@@ -15,7 +23,8 @@ namespace MP_EF_Lavinia_Bleoca
         }
 
         public int Id { get; set; }
-        public override string ResourceType { set => this.ResourceType = "computers"; }
+      
+        public override string ResourceType { get; set; } = "computer";  // C# 6 or higher
 
         public Offices Office { get; set; }
 

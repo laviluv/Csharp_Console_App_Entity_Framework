@@ -17,7 +17,7 @@ namespace MP_EF_Lavinia_Bleoca
         //  public override string ResourceType => "cellphones";
 
         public int Id { get; set; }
-        public override string ResourceType => "cellphones";
+        public override string ResourceType { get; set; } = "cellphone";  // C# 6 or higher
 
         public Offices Office { get; set; }
 

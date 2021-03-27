@@ -114,7 +114,7 @@ namespace MP_EF_Lavinia_Bleoca
                         }
                         else if (TypeOfAsset != "computer" || TypeOfAsset != "cellphone")
                         {
-
+                            //string ResourceType = TypeOfAsset;
                             Console.WriteLine("Skriv in en resurstyp: ");
                             string AssetClass = Console.ReadLine();
                             Console.WriteLine("Skriv in ett marke: ");
@@ -124,7 +124,7 @@ namespace MP_EF_Lavinia_Bleoca
 
 
                             //lagg till resurserna i listan
-                            OtherAssets newAsset = new OtherAssets(AssetClass, Brand, PurchaseTime);
+                            OtherAssets newAsset = new OtherAssets(TypeOfAsset, AssetClass, Brand, PurchaseTime);
                             otherassets.Add(newAsset);
 
 
