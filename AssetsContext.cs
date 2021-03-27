@@ -11,7 +11,7 @@ namespace MP_EF_Lavinia_Bleoca
         public DbSet<Offices> Offices { get; set; }
         public DbSet<Computers> Computers { get; set; }
         public DbSet<CellPhones> CellPhones { get; set; }
-        public DbSet<OtherAssets> OtherAssets { get; set; }
+       // public DbSet<OtherAssets> OtherAssets { get; set; }
 
         public DbSet<DiverseAssets> DiverseAssets { get; set; }
 

@@ -15,7 +15,7 @@ namespace MP_EF_Lavinia_Bleoca
 
             List<Computers> computers = new List<Computers>();
             List<CellPhones> cellphones = new List<CellPhones>();
-            List<OtherAssets> otherassets = new List<OtherAssets>();
+          //  List<OtherAssets> otherassets = new List<OtherAssets>();
             List<DiverseAssets> diverseassets = new List<DiverseAssets>();
 
             //NY DATABASKONCEPT FOR RESURSLOGGEN

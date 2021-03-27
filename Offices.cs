@@ -13,7 +13,7 @@ namespace MP_EF_Lavinia_Bleoca
         public List<Computers> Computers { get; set; }
         public List<CellPhones> CellPhones { get; set; }
 
-        public List<OtherAssets> OtherAssets { get; set; }
+        //public List<OtherAssets> OtherAssets { get; set; }
         public List<DiverseAssets> DiverseAssets { get; internal set; }
     }
 }
