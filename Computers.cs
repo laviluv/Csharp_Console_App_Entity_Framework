@@ -26,6 +26,7 @@ namespace MP_EF_Lavinia_Bleoca
       
         public override string ResourceType { get; set; } = "computer";  // C# 6 or higher
 
+
         public Offices Office { get; set; }
 
 

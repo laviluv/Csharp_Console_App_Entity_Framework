@@ -16,7 +16,7 @@ namespace MP_EF_Lavinia_Bleoca
             List<Computers> computers = new List<Computers>();
             List<CellPhones> cellphones = new List<CellPhones>();
             List<OtherAssets> otherassets = new List<OtherAssets>();
-
+            List<DiverseAssets> diverseassets = new List<DiverseAssets>();
 
             //NY DATABASKONCEPT FOR RESURSLOGGEN
             AssetsContext _db = new AssetsContext();
@@ -74,7 +74,7 @@ namespace MP_EF_Lavinia_Bleoca
                             string Brand = Console.ReadLine();
                             Console.WriteLine("Skriv in kontornamnet: ");
                             string OfficeN = Console.ReadLine();
-
+                            
 
                             //lagg till resurserna i listan
                             Computers newComputer = new Computers(ComputerType, Brand, PurchaseTime);
@@ -112,9 +112,33 @@ namespace MP_EF_Lavinia_Bleoca
 
 
                         }
-                        else if (TypeOfAsset != "computer" || TypeOfAsset != "cellphone")
+                        else if (TypeOfAsset != "computer" || TypeOfAsset != "cellphone" )
                         {
-                            //string ResourceType = TypeOfAsset;
+
+                            string resourceType = TypeOfAsset;
+                            Console.WriteLine("Skriv in en resurstyp: ");
+                            string Model = Console.ReadLine();
+                            Console.WriteLine("Skriv in ett marke: ");
+                            string Brand = Console.ReadLine();
+                            Console.WriteLine("Skriv in kontornamnet: ");
+                            string OfficeN = Console.ReadLine();
+
+
+                            //lagg till resurserna i listan
+                            DiverseAssets newDiverseAsset = new DiverseAssets(resourceType, Model, Brand, PurchaseTime);
+                            diverseassets.Add(newDiverseAsset);
+
+
+
+                            office.Name = OfficeN;
+                            office.DiverseAssets = diverseassets;
+                            _db.Offices.Add(office);
+                            _db.SaveChanges();
+
+
+
+                            /*
+                           // string ResourceType = TypeOfAsset;
                             Console.WriteLine("Skriv in en resurstyp: ");
                             string AssetClass = Console.ReadLine();
                             Console.WriteLine("Skriv in ett marke: ");
@@ -124,7 +148,7 @@ namespace MP_EF_Lavinia_Bleoca
 
 
                             //lagg till resurserna i listan
-                            OtherAssets newAsset = new OtherAssets(TypeOfAsset, AssetClass, Brand, PurchaseTime);
+                            OtherAssets newAsset = new OtherAssets(TypeOfAsset,  AssetClass, Brand, PurchaseTime);
                             otherassets.Add(newAsset);
 
 
@@ -134,6 +158,7 @@ namespace MP_EF_Lavinia_Bleoca
                             _db.Offices.Add(office);
                             _db.SaveChanges();
 
+                            */
 
 
                         }

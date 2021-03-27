@@ -13,6 +13,8 @@ namespace MP_EF_Lavinia_Bleoca
         public DbSet<CellPhones> CellPhones { get; set; }
         public DbSet<OtherAssets> OtherAssets { get; set; }
 
+        public DbSet<DiverseAssets> DiverseAssets { get; set; }
+
 
         string connectionString = "Data Source = (localdb)\\ProjectsV13; Initial Catalog = assetsdatabase; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False;Trusted_Connection = True";
         protected override void OnConfiguring(DbContextOptionsBuilder OB)
