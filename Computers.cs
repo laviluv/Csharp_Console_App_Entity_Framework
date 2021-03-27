@@ -6,16 +6,16 @@ namespace MP_EF_Lavinia_Bleoca
 {
     class Computers : Assets
     {
-        public Computers(string model, string brand, DateTime purchased)
+        public Computers( string model, string brand, DateTime purchased)
         {
-            //ResourceType = "computers";
+           // ResourceType = resourcetype;
             Model = model;
             Brand = brand;
             Purchased = purchased;
         }
 
         public int Id { get; set; }
-        public override string ResourceType => "computers";
+        public override string ResourceType { set => this.ResourceType = "computers"; }
 
         public Offices Office { get; set; }
 
