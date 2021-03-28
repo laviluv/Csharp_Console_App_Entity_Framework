@@ -57,12 +57,6 @@ namespace MP_EF_Lavinia_Bleoca
                         Offices office = new Offices();
 
                         //om dator
-                        /*
-                        switch (TypeOfAsset == "computer")
-                        {
-                            default:
-                        }
-                        */
 
                         if (TypeOfAsset.Contains("computer"))
                         {
@@ -136,31 +130,6 @@ namespace MP_EF_Lavinia_Bleoca
                             _db.SaveChanges();
 
 
-
-                            /*
-                           // string ResourceType = TypeOfAsset;
-                            Console.WriteLine("Skriv in en resurstyp: ");
-                            string AssetClass = Console.ReadLine();
-                            Console.WriteLine("Skriv in ett marke: ");
-                            string Brand = Console.ReadLine();
-                            Console.WriteLine("Skriv in kontornamnet: ");
-                            string OfficeN = Console.ReadLine();
-
-
-                            //lagg till resurserna i listan
-                            OtherAssets newAsset = new OtherAssets(TypeOfAsset,  AssetClass, Brand, PurchaseTime);
-                            otherassets.Add(newAsset);
-
-
-
-                            office.Name = OfficeN;
-                            office.OtherAssets = otherassets;
-                            _db.Offices.Add(office);
-                            _db.SaveChanges();
-
-                            */
-
-
                         }
                         else
                         {
@@ -168,16 +137,10 @@ namespace MP_EF_Lavinia_Bleoca
                         }
 
 
-                        //HERE!!!!!!!!!!!!!
-
-
-
-
 
 
                     }
-                    //
-                    //_db.SaveChanges();
+                  
 
                 }
                 catch (FormatException WrongDateFormat)
@@ -185,20 +148,8 @@ namespace MP_EF_Lavinia_Bleoca
                     Console.WriteLine($"Datum ska vara i formatet YYYY-MM-DD: {WrongDateFormat}");
                 }
 
-                //_db.SaveChanges();
-
-
-
 
             }
-
-
-
-
-
-            //  _db.SaveChanges();
-
-
 
 
 
@@ -218,12 +169,17 @@ namespace MP_EF_Lavinia_Bleoca
 
 
 
+                List<Assets> allasets = new List<Assets>();
+                List<Computers> allcomputers = _db.Computers.ToList();
+                List<CellPhones> allcellphones = _db.CellPhones.ToList();
+                allasets.AddRange(allcomputers);
+                allasets.AddRange(allcellphones);
+
+                allasets = allasets.OrderByDescending(allasets => allasets.GetType().Name).ToList();
+
                 //sortering per kategori sen inkopsdatum
 
-                List<Offices> comps = _db.Offices.Where(comp => comp.Name.Contains("Lavi")).Include(comp => comp.Computers).ToList();
 
-
-                //Name.ToString().ToList();
 
                 //ToString().ToList());
                 /*
@@ -232,13 +188,36 @@ namespace MP_EF_Lavinia_Bleoca
                     //Purchased.ToString());
                     //.ToList();
                 */
+
+                foreach (Assets asset in allasets)
+                {
+                    if (asset is Computers)
+                    {
+                        Computers computer = asset as Computers;
+                       
+                        Console.WriteLine(computer.GetType().Name + " " + computer.Brand + " " + computer.Model );
+                    }
+                    else
+                    {
+                        Console.WriteLine(asset.GetType().Name + " " + asset.Brand + " " + asset.Model);
+
+
+                    }
+                }
+
+
+
+              
                 Console.WriteLine(" ");
 
 
-                foreach (Offices asset in comps)
+                foreach (Offices asset in offices)
                 {
 
-                    Console.WriteLine(comps.GetType().Name.ToString());
+                 //   Console.WriteLine(asset.Name.ToUpper().ToString());
+                  //  Console.WriteLine(asset.ToString());
+
+               //     Console.WriteLine("\n\n\n.......................5...........");
 
 
 
@@ -297,7 +276,7 @@ namespace MP_EF_Lavinia_Bleoca
                     }
                     */
 
-                    Console.WriteLine("asset");
+                    //Console.WriteLine("asset");
 
 
                     //Use Include for child objects
