@@ -20,6 +20,7 @@ namespace MP_EF_Lavinia_Bleoca
             Model = model;
             Brand = brand;
             Purchased = purchased;
+          //  this.IsDeprecated = IsDeprecated;
         }
 
         public int Id { get; set; }

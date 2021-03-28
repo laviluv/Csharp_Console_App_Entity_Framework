@@ -9,13 +9,16 @@ namespace MP_EF_Lavinia_Bleoca
     {
 
         static AssetsContext _db = new AssetsContext();
+
+        public static bool IsDeprecated { get; private set; }
+
         static void Main(string[] args)
         {
             //code
 
             List<Computers> computers = new List<Computers>();
             List<CellPhones> cellphones = new List<CellPhones>();
-          //  List<OtherAssets> otherassets = new List<OtherAssets>();
+            //  List<OtherAssets> otherassets = new List<OtherAssets>();
             List<DiverseAssets> diverseassets = new List<DiverseAssets>();
 
             //NY DATABASKONCEPT FOR RESURSLOGGEN
@@ -28,7 +31,10 @@ namespace MP_EF_Lavinia_Bleoca
 
             while (true)
             {
-                Console.WriteLine("Skriv in en resurskategori med Enter, avbryt inmatningen med 'q'\nRedan existerande kategorier  ar 'computer' och 'cellphone'.\n----------------------------------------\n");
+                Console.WriteLine("\n**********************************************************\n" +
+                    "* Skriv in en resurskategori med Enter\n - Redan existerande kategorier  ar 'computer' och 'cellphone'.\n " +
+                    "* Avbryt inmatningen med 'q'\n - Detta listar tillgangliga resurser\n----------------------------------------\n");
+
                 string TypeOfAsset = Console.ReadLine();
 
                 if (TypeOfAsset.ToLower() == "q")
@@ -50,7 +56,7 @@ namespace MP_EF_Lavinia_Bleoca
 
                         DateTime PurchaseTime = Convert.ToDateTime(Purchased);
 
-                        Assets deprecated = new Assets();
+                        Deprecated deprecated = new Deprecated();
 
                         bool IsDeprecated = deprecated.CheckDeprecated(PurchaseTime);
 
@@ -62,13 +68,13 @@ namespace MP_EF_Lavinia_Bleoca
                         {
 
                             Console.WriteLine("Skriv in en resurstyp (redan existerande ar 'stationary' och 'laptop'): ");
-                           // string ResourceType = "computer";
+                            // string ResourceType = "computer";
                             string ComputerType = Console.ReadLine();
                             Console.WriteLine("Skriv in ett marke: ");
                             string Brand = Console.ReadLine();
                             Console.WriteLine("Skriv in kontornamnet: ");
                             string OfficeN = Console.ReadLine();
-                            
+
 
                             //lagg till resurserna i listan
                             Computers newComputer = new Computers(ComputerType, Brand, PurchaseTime);
@@ -106,7 +112,7 @@ namespace MP_EF_Lavinia_Bleoca
 
 
                         }
-                        else if (TypeOfAsset != "computer" || TypeOfAsset != "cellphone" )
+                        else if (TypeOfAsset != "computer" || TypeOfAsset != "cellphone")
                         {
 
                             string resourceType = TypeOfAsset;
@@ -137,10 +143,10 @@ namespace MP_EF_Lavinia_Bleoca
                         }
 
 
-
+                        //  return IsDeprecated;
 
                     }
-                  
+
 
                 }
                 catch (FormatException WrongDateFormat)
@@ -152,137 +158,153 @@ namespace MP_EF_Lavinia_Bleoca
             }
 
 
-
-
-
-            /////GENRATE METHOD AFTERWRDS
             /// //visa produkterna
 
+            ReadandListAssets(_db);
 
+        }
+
+        private static void ReadandListAssets(AssetsContext _db)
+        {
             try
             {
 
-                Console.WriteLine("RESURSERNA SOM FINNS I DATABASEN");
-
-                Console.WriteLine($"Resurskategori".PadRight(25) + "Resurstyp".PadRight(25) + "Marke".PadRight(25) + "Inkopsdatum".PadRight(25) + "Kontor");
 
 
 
 
                 List<Assets> allasets = new List<Assets>();
+                List<Offices> alloffices = _db.Offices.ToList();
                 List<Computers> allcomputers = _db.Computers.ToList();
                 List<CellPhones> allcellphones = _db.CellPhones.ToList();
+                List<DiverseAssets> alldiverseassets = _db.DiverseAssets.ToList();
+                //  allasets.AddRange(alloffices);
                 allasets.AddRange(allcomputers);
                 allasets.AddRange(allcellphones);
+                allasets.AddRange(alldiverseassets);
 
-                allasets = allasets.OrderByDescending(allasets => allasets.GetType().Name).ToList();
+                //sortering per kontor, kategori sen inkopsdatum
+                allasets = allasets.OrderByDescending(allasets => allasets.GetType().Name)
+                    .ThenBy(allasets => allasets.ResourceType)
+                    .ThenBy(allasets => allasets.Purchased)
+                    .ToList();
 
-                //sortering per kategori sen inkopsdatum
+                Console.WriteLine("RESURSER SOM FINNS I DATABASEN:\n");
 
+                Console.WriteLine($"..............".PadRight(25) + "..............".PadRight(25) + "..............".PadRight(25)
+                    + "..............".PadRight(25) + "..............".PadRight(25)
+                    + "..............");
 
+                Console.WriteLine($"Resurskategori".PadRight(25) + "Resurstyp".PadRight(25) + "Marke".PadRight(25) + "Inkopsdatum".PadRight(25) + "Kontor".PadRight(25)
+                    + "KontorID");
 
-                //ToString().ToList());
-                /*
-                    office.OrderBy(office => office.GetType().Name)
-                        .ThenBy(Assets => Assets.GetType().Name.ToString().ToList());
-                    //Purchased.ToString());
-                    //.ToList();
-                */
+                Console.WriteLine($"..............".PadRight(25) + "..............".PadRight(25) + "..............".PadRight(25)
+                    + "..............".PadRight(25) + "..............".PadRight(25)
+                    + "..............");
 
                 foreach (Assets asset in allasets)
                 {
-                    if (asset is Computers)
+                    if (asset is Computers && IsDeprecated == true)
                     {
                         Computers computer = asset as Computers;
-                       
-                        Console.WriteLine(computer.GetType().Name + " " + computer.Brand + " " + computer.Model );
+                        Console.ForegroundColor = ConsoleColor.Red;
+
+                        Console.WriteLine(computer.GetType().Name.PadRight(25) + " " + computer.Brand.PadRight(25) + " "
+                            + computer.Model.PadRight(25) + " "
+                            + computer.Purchased.ToShortDateString().ToString().PadRight(25)
+                            + " "
+                            + computer.Office.Name.PadRight(25)
+                            + "<" + computer.Office.Id + ">"
+                                                        + " "
+                            + "*"
+                            , Console.ForegroundColor);
+                        Console.ResetColor();
+                    }
+                    else if (asset is Computers && IsDeprecated == false)
+                    {
+                        Computers computer = asset as Computers;
+
+
+                        Console.WriteLine(computer.GetType().Name.PadRight(25) + " " + computer.Brand.PadRight(25) + " "
+                            + computer.Model.PadRight(25) + " "
+                            + computer.Purchased.ToShortDateString().ToString().PadRight(25)
+                            + " "
+                            + computer.Office.Name.PadRight(25)
+                            + "<" + computer.Office.Id + ">");
+                    }
+
+                    else if (asset is CellPhones && IsDeprecated == false)
+                    {
+                        CellPhones cellPhone = asset as CellPhones;
+
+                        Console.WriteLine(cellPhone.GetType().Name.PadRight(25) + " " + cellPhone.Brand.PadRight(25) + " "
+                           + cellPhone.Model.PadRight(25) + " "
+                           + cellPhone.Purchased.ToShortDateString().ToString().PadRight(25)
+                           + " "
+                           + cellPhone.Office.Name.PadRight(25)
+                           + "<" + cellPhone.Office.Id + ">");
+
+                    }
+                    else if (asset is CellPhones && IsDeprecated == true)
+                    {
+                        CellPhones cellPhone = asset as CellPhones;
+                        Console.ForegroundColor = ConsoleColor.Red;
+
+                        Console.WriteLine(cellPhone.GetType().Name.PadRight(25) + " " + cellPhone.Brand.PadRight(25) + " "
+                           + cellPhone.Model.PadRight(25) + " "
+                           + cellPhone.Purchased.ToShortDateString().ToString().PadRight(25)
+                           + " "
+                           + cellPhone.Office.Name.PadRight(25)
+                           + "<" + cellPhone.Office.Id + ">"
+                                                       + " "
+                            + "*"
+                              , Console.ForegroundColor);
+                        Console.ResetColor();
+
+                    }
+                    else if (asset is DiverseAssets && IsDeprecated == false)
+                    {
+                        DiverseAssets divassets = asset as DiverseAssets;
+
+                        Console.WriteLine(divassets.GetType().Name.PadRight(25) + " " + divassets.Brand.PadRight(25) + " "
+                           + divassets.Model.PadRight(25) + " "
+                           + divassets.Purchased.ToShortDateString().ToString().PadRight(25)
+                           + " "
+                           + divassets.Office.Name.PadRight(25)
+                           + "<" + divassets.Office.Id + ">");
+
+                    }
+                    else if (asset is DiverseAssets && IsDeprecated == true)
+                    {
+                        DiverseAssets divassets = asset as DiverseAssets;
+                        Console.ForegroundColor = ConsoleColor.Red;
+
+                        Console.WriteLine(divassets.GetType().Name.PadRight(25) + " " + divassets.Brand.PadRight(25) + " "
+                           + divassets.Model.PadRight(25) + " "
+                           + divassets.Purchased.ToShortDateString().ToString().PadRight(25)
+                           + " "
+                           + divassets.Office.Name.PadRight(25)
+                           + "<" + divassets.Office.Id + ">"
+                            + " "
+                            + "*"
+                           , Console.ForegroundColor);
+                        Console.ResetColor();
+
                     }
                     else
                     {
-                        Console.WriteLine(asset.GetType().Name + " " + asset.Brand + " " + asset.Model);
+                        Console.WriteLine(asset.GetType().Name.PadRight(25) + " " + asset.Brand.PadRight(25) + " "
+                             + asset.Model.PadRight(25) + " "
+                            + asset.Purchased.ToShortDateString().ToString().PadRight(25)
+                            + " "
+                            + "<NA>");
 
 
                     }
                 }
 
 
-
-              
-                Console.WriteLine(" ");
-
-
-                foreach (Offices asset in offices)
-                {
-
-                 //   Console.WriteLine(asset.Name.ToUpper().ToString());
-                  //  Console.WriteLine(asset.ToString());
-
-               //     Console.WriteLine("\n\n\n.......................5...........");
-
-
-
-                    /*
-                    if (asset is Computers && (asset as Computers).IsDeprecated == true)
-                    {
-
-                        Console.ForegroundColor = ConsoleColor.Red;
-
-                        Console.WriteLine((asset as Computers).ResourceType.PadRight(25) + " " + (asset as Computers).Brand.PadRight(25)
-                       + " " + (asset as Computers).Model.PadRight(25) + (asset as Computers).Purchased.ToShortDateString() 
-                       , Console.ForegroundColor);
-                        Console.ResetColor();
-
-                    }
-                    else if (asset is Computers && (asset as Computers).IsDeprecated == false)
-                    {
-
-                        Console.WriteLine((asset as Computers).ResourceType.PadRight(25) + " " + (asset as Computers).Brand.PadRight(25)
-                       + " " + (asset as Computers).Model.PadRight(25) + (asset as Computers).Purchased.ToShortDateString()
-                       );
-                    }
-                    //Check if asset object is a cellphone object
-                    else if (asset is CellPhones && (asset as CellPhones).IsDeprecated == true)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine((asset as CellPhones).ResourceType.PadRight(25) + " " + (asset as CellPhones).Brand.PadRight(25)
-                                + " " + (asset as CellPhones).Model.PadRight(25) + (asset as CellPhones).Purchased.ToShortDateString()
-                                , Console.ForegroundColor);
-                        Console.ResetColor();
-                    }
-                    else if (asset is CellPhones && (asset as CellPhones).IsDeprecated == false)
-                    {
-                        Console.WriteLine((asset as CellPhones).ResourceType.PadRight(25) + " " + (asset as CellPhones).Brand.PadRight(25)
-                              + " " + (asset as CellPhones).Model.PadRight(25) + (asset as CellPhones).Purchased.ToShortDateString()
-                              );
-                    }
-
-                    //Check if asset object is a new asset object
-                    else if (asset is OtherAssets && (asset as OtherAssets).IsDeprecated == true)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-
-                        Console.WriteLine((asset as OtherAssets).ResourceType.PadRight(25) + " " + (asset as OtherAssets).Brand.PadRight(25)
-                                + " " + (asset as OtherAssets).Model.PadRight(25)
-                             + (asset as OtherAssets).Purchased.ToShortDateString(), Console.ForegroundColor);
-                        Console.ResetColor();
-
-                    }
-                    else if (asset is OtherAssets && (asset as OtherAssets).IsDeprecated == false)
-                    {
-
-                        Console.WriteLine((asset as OtherAssets).ResourceType.PadRight(25) + " " + (asset as OtherAssets).Brand.PadRight(25)
-                                + " " + (asset as OtherAssets).Model.PadRight(25)
-                             + (asset as OtherAssets).Purchased.ToShortDateString());
-                    }
-                    */
-
-                    //Console.WriteLine("asset");
-
-
-                    //Use Include for child objects
-
-
-                }
+                Console.WriteLine("* Aldre an 33 manader");
 
 
             }
@@ -290,17 +312,6 @@ namespace MP_EF_Lavinia_Bleoca
             {
                 Console.WriteLine($"FEL: {exc}");
             }
-
-
-
-
-
         }
-
-
-
-
-
-
     }
 }

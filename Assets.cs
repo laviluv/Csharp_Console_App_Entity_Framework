@@ -11,25 +11,10 @@ namespace MP_EF_Lavinia_Bleoca
         public string Model { get; set; }
         public string Brand { get; set; }
         public DateTime Purchased { get; set; }
-        public bool IsDeprecated { get; set; }
+       // public bool IsDeprecated { get; set; }
 
 
 
-        public bool CheckDeprecated(DateTime purchaseTime)
-        {
-            DateTime CurrentTime = DateTime.Now;
-            TimeSpan timeSpan = CurrentTime - purchaseTime;
-
-            if (timeSpan.TotalDays > 1004)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
 
     }
 }
