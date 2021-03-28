@@ -10,7 +10,7 @@ namespace MP_EF_Lavinia_Bleoca
 
         static AssetsContext _db = new AssetsContext();
 
-        public static bool IsDeprecated { get; private set; }
+
 
         static void Main(string[] args)
         {
@@ -32,8 +32,8 @@ namespace MP_EF_Lavinia_Bleoca
             while (true)
             {
                 Console.WriteLine("\n**********************************************************\n" +
-                    "* Skriv in en resurskategori med Enter\n - Redan existerande kategorier  ar 'computer' och 'cellphone'.\n " +
-                    "* Avbryt inmatningen med 'q'\n - Detta listar tillgangliga resurser\n----------------------------------------\n");
+                    "* Skriv in en resurskategori med Enter - Redan existerande kategorier  ar 'computer' och 'cellphone'.\n\n " +
+                    "* Avbryt inmatningen med 'q' - Detta listar tillgangliga resurser\n----------------------------------------\n");
 
                 string TypeOfAsset = Console.ReadLine();
 
@@ -56,13 +56,10 @@ namespace MP_EF_Lavinia_Bleoca
 
                         DateTime PurchaseTime = Convert.ToDateTime(Purchased);
 
-                        Deprecated deprecated = new Deprecated();
-
-                        bool IsDeprecated = deprecated.CheckDeprecated(PurchaseTime);
-
                         Offices office = new Offices();
 
                         //om dator
+
 
                         if (TypeOfAsset.Contains("computer"))
                         {
@@ -159,7 +156,6 @@ namespace MP_EF_Lavinia_Bleoca
 
 
             /// //visa produkterna
-
             ReadandListAssets(_db);
 
         }
@@ -204,7 +200,12 @@ namespace MP_EF_Lavinia_Bleoca
 
                 foreach (Assets asset in allasets)
                 {
-                    if (asset is Computers && IsDeprecated == true)
+
+                    Deprecated deprecated = new Deprecated();
+
+                    bool isDeprecated = deprecated.CheckDeprecated(asset.Purchased);
+
+                    if (asset is Computers && isDeprecated == true)
                     {
                         Computers computer = asset as Computers;
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -220,7 +221,7 @@ namespace MP_EF_Lavinia_Bleoca
                             , Console.ForegroundColor);
                         Console.ResetColor();
                     }
-                    else if (asset is Computers && IsDeprecated == false)
+                    else if (asset is Computers && isDeprecated == false)
                     {
                         Computers computer = asset as Computers;
 
@@ -233,7 +234,7 @@ namespace MP_EF_Lavinia_Bleoca
                             + "<" + computer.Office.Id + ">");
                     }
 
-                    else if (asset is CellPhones && IsDeprecated == false)
+                    else if (asset is CellPhones && isDeprecated == false)
                     {
                         CellPhones cellPhone = asset as CellPhones;
 
@@ -245,7 +246,7 @@ namespace MP_EF_Lavinia_Bleoca
                            + "<" + cellPhone.Office.Id + ">");
 
                     }
-                    else if (asset is CellPhones && IsDeprecated == true)
+                    else if (asset is CellPhones && isDeprecated == true)
                     {
                         CellPhones cellPhone = asset as CellPhones;
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -262,7 +263,7 @@ namespace MP_EF_Lavinia_Bleoca
                         Console.ResetColor();
 
                     }
-                    else if (asset is DiverseAssets && IsDeprecated == false)
+                    else if (asset is DiverseAssets && isDeprecated == false)
                     {
                         DiverseAssets divassets = asset as DiverseAssets;
 
@@ -274,7 +275,7 @@ namespace MP_EF_Lavinia_Bleoca
                            + "<" + divassets.Office.Id + ">");
 
                     }
-                    else if (asset is DiverseAssets && IsDeprecated == true)
+                    else if (asset is DiverseAssets && isDeprecated == true)
                     {
                         DiverseAssets divassets = asset as DiverseAssets;
                         Console.ForegroundColor = ConsoleColor.Red;

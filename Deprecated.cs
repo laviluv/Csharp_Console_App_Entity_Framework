@@ -7,7 +7,7 @@ namespace MP_EF_Lavinia_Bleoca
     class Deprecated
     {
 
-
+       // public  bool IsDeprecated { get; private set; }
         public bool CheckDeprecated(DateTime purchaseTime)
         {
             DateTime CurrentTime = DateTime.Now;
